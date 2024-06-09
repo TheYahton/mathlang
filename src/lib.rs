@@ -35,20 +35,14 @@ mod tests {
     use Operators::*;
     use Digits::*;
 
-    /*#[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }*/
-
     #[test]
-    fn token() {
+    fn lexer() {
         let result = lexer::tokenize(&"1+7-9".to_string());
         assert_eq!(result, vec![NUMBER(ONE), OP(PLUS), NUMBER(SEVEN), OP(MINUS), NUMBER(NINE)]);
     }
 
     #[test]
-    fn parse() {
+    fn parser() {
         let result = parser::ass(vec![NUMBER(THREE), OP(PLUS), NUMBER(FOUR)]);
         assert_eq!(result, vec![NUMBER(THREE), NUMBER(FOUR), OP(PLUS)]);
     }
