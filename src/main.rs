@@ -4,6 +4,7 @@ use std::path::Path;
 
 use mathlang::lexer::tokenize;
 use mathlang::parser::ast;
+use mathlang::interpreter::interpret;
 
 fn main() {
     let args: Vec<_> = std::env::args().collect();
@@ -22,7 +23,7 @@ fn main() {
             Err(why) => panic!("{}", why),
             Ok(_) => (),
         }
-        println!("{:?}", ast(tokenize(&text)));
+        println!("{:?}", interpret(ast(tokenize(&text))));
     } else {
         println!("Usage: mathlang FILE");
         /*

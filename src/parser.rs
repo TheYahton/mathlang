@@ -54,7 +54,6 @@ pub fn ast(mut expression: Vec<Token>) -> Node {
                         break;
                     }
                 }
-                println!("{:?}", wtf);
                 output.push(ast(wtf));
             }
             Token::Rparenthesis => panic!(),
