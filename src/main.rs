@@ -2,9 +2,9 @@ use std::fs::File;
 use std::io::Read;
 use std::path::Path;
 
+use mathlang::interpreter::interpret;
 use mathlang::lexer::tokenize;
 use mathlang::parser::ast;
-use mathlang::interpreter::interpret;
 
 fn main() {
     let args: Vec<_> = std::env::args().collect();

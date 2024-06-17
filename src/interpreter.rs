@@ -1,8 +1,9 @@
 use crate::structs::{Node, Operator};
 
-pub fn interpret(node: Node) -> i32 {
+pub fn interpret(node: Node) -> f64 {
     match node {
-        Node::Int(n) => n,
+        Node::Int(n) => n as f64,
+        Node::Float(x) => x,
         Node::UnaryExpr { op, child } => {
             let child = interpret(*child);
             match op {
@@ -19,6 +20,7 @@ pub fn interpret(node: Node) -> i32 {
                 Operator::Plus => lhs + rhs,
                 Operator::Minus => lhs - rhs,
                 Operator::Asterisk => lhs * rhs,
+                Operator::Slash => lhs / rhs,
             }
         }
     }

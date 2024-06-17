@@ -3,6 +3,7 @@ pub enum Operator {
     Plus,
     Minus,
     Asterisk,
+    Slash,
 }
 
 #[derive(Debug)]
@@ -11,11 +12,13 @@ pub enum Token {
     Op(Operator),
     Lparenthesis,
     Rparenthesis,
+    Dot,
 }
 
 #[derive(Debug)]
 pub enum Node {
     Int(i32),
+    Float(f64),
     UnaryExpr {
         op: Operator,
         child: Box<Node>,

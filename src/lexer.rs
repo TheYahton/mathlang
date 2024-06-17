@@ -1,6 +1,6 @@
 use crate::structs::{
-    Operator::{Asterisk, Minus, Plus},
-    Token::{self, Lparenthesis, Op, Rparenthesis},
+    Operator::{Asterisk, Minus, Plus, Slash},
+    Token::{self, Dot, Lparenthesis, Op, Rparenthesis},
 };
 
 const DIGITS: &str = "0123456789";
@@ -29,8 +29,10 @@ pub fn tokenize(text: &String) -> Vec<Token> {
             '+' => expression.push(Op(Plus)),
             '-' => expression.push(Op(Minus)),
             '*' => expression.push(Op(Asterisk)),
+            '/' => expression.push(Op(Slash)),
             '(' => expression.push(Lparenthesis),
             ')' => expression.push(Rparenthesis),
+            '.' => expression.push(Dot),
             why => panic!("LexerError: '{}' is unexpected!", why),
         }
         i += 1;
