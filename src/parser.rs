@@ -26,9 +26,8 @@ pub fn ast(mut expression: Vec<Token>) -> Node {
     let mut stack: Vec<Token> = Vec::new();
     let mut output: Vec<Node> = Vec::new();
 
-    let mut i = 0;
-    while i < expression.len() {
-        let token = expression[i].clone();
+    while !expression.is_empty() {
+        let token = expression.remove(0);
         match token {
             Token::Number(k) => output.push(Node::Int(k as i32)),
             Token::Op(k) => {
@@ -47,19 +46,19 @@ pub fn ast(mut expression: Vec<Token>) -> Node {
                 stack.push(Token::Op(k));
             }
             Token::Lparenthesis => {
-                expression.remove(i);
                 let mut wtf: Vec<Token> = Vec::new();
                 loop {
-                    wtf.push(expression.remove(i));
-                    if expression[i] == Token::Rparenthesis {
+                    wtf.push(expression.remove(0));
+                    if matches!(expression[0], Token::Rparenthesis) {
+                        expression.remove(0);
                         break;
                     }
                 }
+                println!("{:?}", wtf);
                 output.push(ast(wtf));
             }
             Token::Rparenthesis => panic!(),
         }
-        i += 1;
     }
 
     while !stack.is_empty() {

@@ -1,11 +1,11 @@
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Debug)]
 pub enum Operator {
     Plus,
     Minus,
     Asterisk,
 }
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Debug)]
 pub enum Token {
     Number(u32),
     Op(Operator),
@@ -13,7 +13,7 @@ pub enum Token {
     Rparenthesis,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug)]
 pub enum Node {
     Int(i32),
     UnaryExpr {
