@@ -3,7 +3,7 @@ use std::io::Read;
 use std::path::Path;
 
 use mathlang::lexer::tokenize;
-use mathlang::parser::ass;
+use mathlang::parser::ast;
 
 fn main() {
     let args: Vec<_> = std::env::args().collect();
@@ -11,7 +11,7 @@ fn main() {
         let path = Path::new(&args[1]);
         if !path.exists() {
             println!("No such file or directory.");
-            return
+            return;
         }
         let mut file = match File::open(&path) {
             Err(why) => panic!("{}", why),
@@ -22,7 +22,7 @@ fn main() {
             Err(why) => panic!("{}", why),
             Ok(_) => (),
         }
-        println!("{:?}", ass(tokenize(&text)));
+        println!("{:?}", ast(tokenize(&text)));
     } else {
         println!("Usage: mathlang FILE");
         /*

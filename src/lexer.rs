@@ -1,27 +1,39 @@
-use crate::{Digits, Operators, Tokens};
+use crate::structs::{
+    Operator::{Asterisk, Minus, Plus},
+    Token::{self, Lparenthesis, Op, Rparenthesis},
+};
 
-pub fn tokenize(text: &String) -> Vec<Tokens> {
-    let text = text.replace("\n", "").replace(" ", "");
+const DIGITS: &str = "0123456789";
 
-    let mut expression: Vec<Tokens> = Vec::new();
-    for symbol in text.chars() {
-        let token: Tokens = match symbol {
-            '0' => Tokens::NUMBER(Digits::ZERO),
-            '1' => Tokens::NUMBER(Digits::ONE),
-            '2' => Tokens::NUMBER(Digits::TWO),
-            '3' => Tokens::NUMBER(Digits::THREE),
-            '4' => Tokens::NUMBER(Digits::FOUR),
-            '5' => Tokens::NUMBER(Digits::FIVE),
-            '6' => Tokens::NUMBER(Digits::SIX),
-            '7' => Tokens::NUMBER(Digits::SEVEN),
-            '8' => Tokens::NUMBER(Digits::EIGHT),
-            '9' => Tokens::NUMBER(Digits::NINE),
-            '+' => Tokens::OP(Operators::PLUS),
-            '-' => Tokens::OP(Operators::MINUS),
-            s => panic!("'{}' is unexpected", s),
-        };
+pub fn tokenize(text: &String) -> Vec<Token> {
+    let mut expression: Vec<Token> = Vec::new();
+    let fck: Vec<_> = text.chars().collect();
 
-        expression.push(token);
+    let mut i = 0;
+    while i < fck.len() {
+        match fck[i] {
+            ' ' | '\n' => (),
+            x if DIGITS.contains(x) => {
+                let mut j = 1;
+                while (i + j) < fck.len() {
+                    if !DIGITS.contains(fck[i + j] as char) {
+                        break;
+                    }
+                    j += 1;
+                }
+                let s: String = fck[i..i + j].iter().collect();
+                let number: u32 = s.parse::<u32>().unwrap();
+                expression.push(Token::Number(number));
+                i += j - 1;
+            }
+            '+' => expression.push(Op(Plus)),
+            '-' => expression.push(Op(Minus)),
+            '*' => expression.push(Op(Asterisk)),
+            '(' => expression.push(Lparenthesis),
+            ')' => expression.push(Rparenthesis),
+            why => panic!("LexerError: '{}' is unexpected!", why),
+        }
+        i += 1;
     }
 
     expression

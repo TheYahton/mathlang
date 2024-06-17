@@ -1,49 +1,33 @@
 pub mod lexer;
 pub mod parser;
-
-
-#[derive(Debug, PartialEq)]
-pub enum Digits {
-    ZERO,
-    ONE,
-    TWO,
-    THREE,
-    FOUR,
-    FIVE,
-    SIX,
-    SEVEN,
-    EIGHT,
-    NINE,
-}
-
-#[derive(Debug, PartialEq)]
-pub enum Operators {
-    PLUS,
-    MINUS,
-}
-
-#[derive(Debug, PartialEq)]
-pub enum Tokens {
-    NUMBER(Digits),
-    OP(Operators),
-}
+mod structs;
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use Tokens::*;
-    use Operators::*;
-    use Digits::*;
+    use crate::structs::Node::*;
+    use crate::structs::Operator::*;
+    use crate::structs::Token::*;
 
     #[test]
     fn lexer() {
         let result = lexer::tokenize(&"1+7-9".to_string());
-        assert_eq!(result, vec![NUMBER(ONE), OP(PLUS), NUMBER(SEVEN), OP(MINUS), NUMBER(NINE)]);
+        assert_eq!(
+            result,
+            vec![Number(1), Op(Plus), Number(7), Op(Minus), Number(9)]
+        );
     }
 
     #[test]
     fn parser() {
-        let result = parser::ass(vec![NUMBER(THREE), OP(PLUS), NUMBER(FOUR)]);
-        assert_eq!(result, vec![NUMBER(THREE), NUMBER(FOUR), OP(PLUS)]);
+        let result = parser::ast(vec![Number(3), Op(Plus), Number(4)]);
+        assert_eq!(
+            result,
+            BinaryExpr {
+                op: Plus,
+                lhs: Box::new(Int(3)),
+                rhs: Box::new(Int(4))
+            }
+        );
     }
 }
