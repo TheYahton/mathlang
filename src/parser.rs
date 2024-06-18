@@ -46,29 +46,21 @@ pub fn ast(mut expression: Vec<Token>) -> Node {
                 stack.push(Token::Op(k));
             }
             Token::Lparenthesis => {
-                let mut wtf: Vec<Token> = Vec::new();
-                let mut l_counter = 0;
-                let mut r_counter = 0;
-                let mut end_index = 0;
-                let mut i = 0;
-                while i < expression.len() {
-                    match expression[i] {
-                        Token::Lparenthesis => l_counter += 1,
-                        Token::Rparenthesis => r_counter += 1,
+                let mut internal: Vec<Token> = Vec::new();
+                let mut n: i32 = 0;
+                while !expression.is_empty() {
+                    let token = expression.remove(0);
+                    match token {
+                        Token::Lparenthesis => n -= 1,
+                        Token::Rparenthesis => n += 1,
                         _ => (),
                     }
-                    if r_counter > l_counter {
-                        end_index = i;
+                    if n > 0 {
                         break;
                     }
-                    i += 1;
+                    internal.push(token);
                 }
-
-                for _ in 0..end_index {
-                    wtf.push(expression.remove(0));
-                }
-                expression.remove(0);
-                output.push(ast(wtf));
+                output.push(ast(internal));
             }
             Token::Rparenthesis => panic!(),
             Token::Dot => {
