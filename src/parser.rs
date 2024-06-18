@@ -24,7 +24,7 @@ fn token2node(token: Token, output: &mut Vec<Node>) -> Node {
 
 fn to_fractional(k: u32) -> f64 {
     // 18272 -> 0.18272
-    k as f64 / 10.0f64.powf((k.checked_ilog10().unwrap_or(0) + 1) as f64)
+    k as f64 / 10.0f64.powi((k.checked_ilog10().unwrap_or(0) + 1) as i32)
 }
 
 pub fn ast(mut expression: Vec<Token>) -> Node {
@@ -47,13 +47,27 @@ pub fn ast(mut expression: Vec<Token>) -> Node {
             }
             Token::Lparenthesis => {
                 let mut wtf: Vec<Token> = Vec::new();
-                loop {
-                    wtf.push(expression.remove(0));
-                    if matches!(expression[0], Token::Rparenthesis) {
-                        expression.remove(0);
+                let mut l_counter = 0;
+                let mut r_counter = 0;
+                let mut end_index = 0;
+                let mut i = 0;
+                while i < expression.len() {
+                    match expression[i] {
+                        Token::Lparenthesis => l_counter += 1,
+                        Token::Rparenthesis => r_counter += 1,
+                        _ => (),
+                    }
+                    if r_counter > l_counter {
+                        end_index = i;
                         break;
                     }
+                    i += 1;
                 }
+
+                for _ in 0..end_index {
+                    wtf.push(expression.remove(0));
+                }
+                expression.remove(0);
                 output.push(ast(wtf));
             }
             Token::Rparenthesis => panic!(),
@@ -103,6 +117,5 @@ pub fn ast(mut expression: Vec<Token>) -> Node {
         let node = token2node(element, &mut output);
         output.push(node);
     }
-
     output.pop().unwrap()
 }
