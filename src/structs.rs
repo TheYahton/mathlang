@@ -8,11 +8,11 @@ pub enum Operator {
 
 #[derive(Debug)]
 pub enum Token {
-    Number(u32),
+    Int(u32),
+    Float(f64),
     Op(Operator),
     Lparenthesis,
     Rparenthesis,
-    Dot,
 }
 
 #[derive(Debug)]

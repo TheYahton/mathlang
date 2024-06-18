@@ -1,30 +1,46 @@
 use crate::structs::{
     Operator::{Asterisk, Minus, Plus, Slash},
-    Token::{self, Dot, Lparenthesis, Op, Rparenthesis},
+    Token::{self, Float, Int, Lparenthesis, Op, Rparenthesis},
 };
 
 const DIGITS: &str = "0123456789";
 
+fn parse_number(index: &mut usize, text: &Vec<char>) -> u32 {
+    let mut j = 1;
+    while (*index + j) < text.len() {
+        if !DIGITS.contains(text[*index + j] as char) {
+            break;
+        }
+        j += 1;
+    }
+    let s: String = text[*index..*index + j].iter().collect();
+    *index += j - 1;
+
+    s.parse().unwrap()
+}
+
+fn to_fractional(k: u32) -> f64 {
+    // 18272 -> 0.18272
+    k as f64 / 10.0f64.powi((k.checked_ilog10().unwrap_or(0) + 1) as i32)
+}
+
 pub fn tokenize(text: &String) -> Vec<Token> {
     let mut expression: Vec<Token> = Vec::new();
-    let text: Vec<_> = text.chars().collect();
+    let text: Vec<char> = text.chars().collect();
 
     let mut i = 0;
     while i < text.len() {
         let token = match text[i] {
             ' ' | '\n' => None,
             x if DIGITS.contains(x) => {
-                let mut j = 1;
-                while (i + j) < text.len() {
-                    if !DIGITS.contains(text[i + j] as char) {
-                        break;
-                    }
-                    j += 1;
+                let integer: u32 = parse_number(&mut i, &text);
+                if i + 1 > text.len() && text[i + 1] == '.' {
+                    i += 2;
+                    let fractional: f64 = to_fractional(parse_number(&mut i, &text));
+                    Some(Float(integer as f64 + fractional))
+                } else {
+                    Some(Int(integer))
                 }
-                let s: String = text[i..i + j].iter().collect();
-                let number: u32 = s.parse::<u32>().unwrap();
-                i += j - 1;
-                Some(Token::Number(number))
             }
             '+' => Some(Op(Plus)),
             '-' => Some(Op(Minus)),
@@ -32,7 +48,6 @@ pub fn tokenize(text: &String) -> Vec<Token> {
             '/' => Some(Op(Slash)),
             '(' => Some(Lparenthesis),
             ')' => Some(Rparenthesis),
-            '.' => Some(Dot),
             why => panic!("LexerError: '{}' is unexpected!", why),
         };
         if let Some(x) = token {
