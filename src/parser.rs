@@ -47,15 +47,15 @@ pub fn ast(mut expression: Vec<Token>) -> Node {
             }
             Token::Lparenthesis => {
                 let mut internal: Vec<Token> = Vec::new();
-                let mut n: i32 = 0;
+                let mut n: i32 = 1;
                 while !expression.is_empty() {
                     let token = expression.remove(0);
                     match token {
-                        Token::Lparenthesis => n -= 1,
-                        Token::Rparenthesis => n += 1,
+                        Token::Lparenthesis => n += 1,
+                        Token::Rparenthesis => n -= 1,
                         _ => (),
                     }
-                    if n > 0 {
+                    if n == 0 {
                         break;
                     }
                     internal.push(token);
