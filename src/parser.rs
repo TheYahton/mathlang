@@ -1,16 +1,25 @@
-use crate::structs::{Node, Token};
+use crate::structs::{BinaryOp, Node, Operator, Token, UnaryOp};
 
 fn token2node(token: Token, output: &mut Vec<Node>) -> Node {
     match token {
         Token::Op(k) => {
             if output.len() >= 2 {
-                let op = k;
+                let op = match k {
+                    Operator::Plus => BinaryOp::Add,
+                    Operator::Minus => BinaryOp::Subtract,
+                    Operator::Asterisk => BinaryOp::Multiply,
+                    Operator::Slash => BinaryOp::Divide,
+                };
                 let rhs = Box::new(output.pop().unwrap());
                 let lhs = Box::new(output.pop().unwrap());
 
                 return Node::BinaryExpr { op, lhs, rhs };
             } else if output.len() == 1 {
-                let op = k;
+                let op = match k {
+                    Operator::Plus => UnaryOp::Positive,
+                    Operator::Minus => UnaryOp::Negative,
+                    _ => panic!(),
+                };
                 let child = Box::new(output.pop().unwrap());
 
                 return Node::UnaryExpr { op, child };

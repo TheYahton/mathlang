@@ -1,4 +1,4 @@
-use crate::structs::{Node, Operator};
+use crate::structs::{BinaryOp, Node, UnaryOp};
 
 pub fn interpret(node: Node) -> f64 {
     match node {
@@ -7,9 +7,8 @@ pub fn interpret(node: Node) -> f64 {
         Node::UnaryExpr { op, child } => {
             let child = interpret(*child);
             match op {
-                Operator::Plus => child,
-                Operator::Minus => -child,
-                _ => panic!(),
+                UnaryOp::Positive => child,
+                UnaryOp::Negative => -child,
             }
         }
         Node::BinaryExpr { op, lhs, rhs } => {
@@ -17,10 +16,10 @@ pub fn interpret(node: Node) -> f64 {
             let rhs = interpret(*rhs);
 
             match op {
-                Operator::Plus => lhs + rhs,
-                Operator::Minus => lhs - rhs,
-                Operator::Asterisk => lhs * rhs,
-                Operator::Slash => lhs / rhs,
+                BinaryOp::Add => lhs + rhs,
+                BinaryOp::Subtract => lhs - rhs,
+                BinaryOp::Multiply => lhs * rhs,
+                BinaryOp::Divide => lhs / rhs,
             }
         }
     }

@@ -16,15 +16,29 @@ pub enum Token {
 }
 
 #[derive(Debug)]
+pub enum UnaryOp {
+    Positive,
+    Negative,
+}
+
+#[derive(Debug)]
+pub enum BinaryOp {
+    Add,
+    Subtract,
+    Multiply,
+    Divide,
+}
+
+#[derive(Debug)]
 pub enum Node {
     Int(i32),
     Float(f64),
     UnaryExpr {
-        op: Operator,
+        op: UnaryOp,
         child: Box<Node>,
     },
     BinaryExpr {
-        op: Operator,
+        op: BinaryOp,
         lhs: Box<Node>,
         rhs: Box<Node>,
     },
