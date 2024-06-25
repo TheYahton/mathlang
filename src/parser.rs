@@ -1,38 +1,33 @@
 use crate::structs::{BinaryOp, Node, Operator, Token, UnaryOp};
 
-fn token2node(token: Token, output: &mut Vec<Node>) -> Node {
-    match token {
-        Token::Op(k) => {
-            if output.len() >= 2 {
-                let op = match k {
-                    Operator::Plus => BinaryOp::Add,
-                    Operator::Minus => BinaryOp::Subtract,
-                    Operator::Asterisk => BinaryOp::Multiply,
-                    Operator::Slash => BinaryOp::Divide,
-                };
-                let rhs = Box::new(output.pop().unwrap());
-                let lhs = Box::new(output.pop().unwrap());
+fn token2node(k: Operator, output: &mut Vec<Node>) -> Node {
+    if output.len() >= 2 {
+        let op = match k {
+            Operator::Plus => BinaryOp::Add,
+            Operator::Minus => BinaryOp::Subtract,
+            Operator::Asterisk => BinaryOp::Multiply,
+            Operator::Slash => BinaryOp::Divide,
+        };
+        let rhs = Box::new(output.pop().unwrap());
+        let lhs = Box::new(output.pop().unwrap());
 
-                return Node::BinaryExpr { op, lhs, rhs };
-            } else if output.len() == 1 {
-                let op = match k {
-                    Operator::Plus => UnaryOp::Positive,
-                    Operator::Minus => UnaryOp::Negative,
-                    _ => panic!(),
-                };
-                let child = Box::new(output.pop().unwrap());
+        return Node::BinaryExpr { op, lhs, rhs };
+    } else if output.len() == 1 {
+        let op = match k {
+            Operator::Plus => UnaryOp::Positive,
+            Operator::Minus => UnaryOp::Negative,
+            _ => panic!("Оператор {:?} не может быть унарным.", k),
+        };
+        let child = Box::new(output.pop().unwrap());
 
-                return Node::UnaryExpr { op, child };
-            } else {
-                panic!()
-            }
-        }
-        _ => panic!(),
+        return Node::UnaryExpr { op, child };
+    } else {
+        panic!("Оператор {:?} не к чему применить.", k)
     }
 }
 
 pub fn ast(mut expression: Vec<Token>) -> Node {
-    let mut stack: Vec<Token> = Vec::new();
+    let mut stack: Vec<Operator> = Vec::new();
     let mut output: Vec<Node> = Vec::new();
 
     while !expression.is_empty() {
@@ -42,13 +37,13 @@ pub fn ast(mut expression: Vec<Token>) -> Node {
             Token::Float(k) => output.push(Node::Float(k)),
             Token::Op(k) => {
                 if !stack.is_empty() {
-                    while !stack.is_empty() && matches!(stack[stack.len() - 1], Token::Op(_)) {
-                        let element = stack.remove(stack.len() - 1);
+                    while !stack.is_empty() {
+                        let element: Operator = stack.remove(stack.len() - 1);
                         let node = token2node(element, &mut output);
                         output.push(node);
                     }
                 }
-                stack.push(Token::Op(k));
+                stack.push(k);
             }
             Token::Lparenthesis => {
                 let mut internal: Vec<Token> = Vec::new();
@@ -65,9 +60,12 @@ pub fn ast(mut expression: Vec<Token>) -> Node {
                     }
                     internal.push(token);
                 }
+                if expression.is_empty() && n != 0 {
+                    panic!("Синтаксическая ошибка: '(' не закрывается");
+                }
                 output.push(ast(internal));
             }
-            Token::Rparenthesis => panic!(),
+            Token::Rparenthesis => panic!("Синтаксическая ошибка: неожиданное ')'"),
         }
     }
 
@@ -76,5 +74,5 @@ pub fn ast(mut expression: Vec<Token>) -> Node {
         let node = token2node(element, &mut output);
         output.push(node);
     }
-    output.pop().unwrap()
+    output.pop().expect("Входное выражение пусто.")
 }
