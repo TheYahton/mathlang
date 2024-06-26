@@ -28,11 +28,13 @@ fn token2node(k: Operator, output: &mut Vec<Node>) -> Node {
 }
 
 pub fn ast(mut expression: Vec<Token>) -> Node {
+    expression.reverse();
+
     let mut stack: Vec<Operator> = Vec::new();
     let mut output: Vec<Node> = Vec::new();
 
     while !expression.is_empty() {
-        let token = expression.remove(0);
+        let token = expression.pop().unwrap();
         match token {
             Token::Int(k) => output.push(Node::Int(k as i32)),
             Token::Float(k) => output.push(Node::Float(k)),
@@ -50,7 +52,7 @@ pub fn ast(mut expression: Vec<Token>) -> Node {
                 let mut internal: Vec<Token> = Vec::new();
                 let mut n: i32 = 1;
                 while !expression.is_empty() {
-                    let token = expression.remove(0);
+                    let token = expression.pop().unwrap();
                     match token {
                         Token::Lparenthesis => n += 1,
                         Token::Rparenthesis => n -= 1,
