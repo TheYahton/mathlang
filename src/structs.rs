@@ -4,7 +4,7 @@ pub enum Operator {
     Minus,
     Asterisk,
     Slash,
-    Circumflex,
+    Caret,
 }
 
 #[derive(Debug)]

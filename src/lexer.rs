@@ -46,7 +46,7 @@ pub fn tokenize(text: &String) -> Vec<Token> {
             '-' => Some(Op(Minus)),
             '*' => Some(Op(Asterisk)),
             '/' => Some(Op(Slash)),
-            '^' => Some(Op(Circumflex)),
+            '^' => Some(Op(Caret)),
             '(' => Some(Lparenthesis),
             ')' => Some(Rparenthesis),
             why => panic!("LexerError: '{}' is unexpected!", why),
