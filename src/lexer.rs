@@ -1,14 +1,12 @@
 use crate::structs::{
     Operator::*,
-    Token::{self, Float, Int, Lparenthesis, Op, Rparenthesis},
+    Token::{self, *},
 };
-
-const DIGITS: &str = "0123456789";
 
 fn parse_number(index: &mut usize, text: &Vec<char>) -> u32 {
     let mut j = 1;
     while (*index + j) < text.len() {
-        if !DIGITS.contains(text[*index + j] as char) {
+        if !text[*index + j].is_digit(10) {
             break;
         }
         j += 1;
@@ -32,7 +30,7 @@ pub fn tokenize(text: &String) -> Vec<Token> {
     while i < text.len() {
         let token = match text[i] {
             ' ' | '\n' => None,
-            x if DIGITS.contains(x) => {
+            x if x.is_digit(10) => {
                 let integer: u32 = parse_number(&mut i, &text);
                 if i + 1 > text.len() && text[i + 1] == '.' {
                     i += 2;
