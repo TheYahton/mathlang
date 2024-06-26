@@ -32,7 +32,6 @@ pub fn tokenize(text: &String) -> Vec<Token> {
             ' ' | '\n' => None,
             x if x.is_digit(10) => {
                 let integer: u32 = parse_number(&mut i, &text);
-                println!("{}", i);
                 if i + 1 < text.len() && text[i + 1] == '.' {
                     i += 2;
                     let fractional: f64 = to_fractional(parse_number(&mut i, &text));
