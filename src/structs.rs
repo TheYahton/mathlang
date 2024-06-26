@@ -4,6 +4,7 @@ pub enum Operator {
     Minus,
     Asterisk,
     Slash,
+    Circumflex,
 }
 
 #[derive(Debug)]
@@ -27,6 +28,7 @@ pub enum BinaryOp {
     Subtract,
     Multiply,
     Divide,
+    Power,
 }
 
 #[derive(Debug)]

@@ -20,6 +20,7 @@ pub fn interpret(node: Node) -> f64 {
                 BinaryOp::Subtract => lhs - rhs,
                 BinaryOp::Multiply => lhs * rhs,
                 BinaryOp::Divide => lhs / rhs,
+                BinaryOp::Power => lhs.powf(rhs),
             }
         }
     }

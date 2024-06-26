@@ -1,5 +1,5 @@
 use crate::structs::{
-    Operator::{Asterisk, Minus, Plus, Slash},
+    Operator::*,
     Token::{self, Float, Int, Lparenthesis, Op, Rparenthesis},
 };
 
@@ -46,6 +46,7 @@ pub fn tokenize(text: &String) -> Vec<Token> {
             '-' => Some(Op(Minus)),
             '*' => Some(Op(Asterisk)),
             '/' => Some(Op(Slash)),
+            '^' => Some(Op(Circumflex)),
             '(' => Some(Lparenthesis),
             ')' => Some(Rparenthesis),
             why => panic!("LexerError: '{}' is unexpected!", why),

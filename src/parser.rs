@@ -7,6 +7,7 @@ fn token2node(k: Operator, output: &mut Vec<Node>) -> Node {
             Operator::Minus => BinaryOp::Subtract,
             Operator::Asterisk => BinaryOp::Multiply,
             Operator::Slash => BinaryOp::Divide,
+            Operator::Circumflex => BinaryOp::Power,
         };
         let rhs = Box::new(output.pop().unwrap());
         let lhs = Box::new(output.pop().unwrap());
