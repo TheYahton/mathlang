@@ -1,24 +1,32 @@
 use crate::structs::{BinaryOp, Node, Operator, Token, UnaryOp};
 
+fn op2unary(k: Operator) -> UnaryOp {
+    match k {
+        Operator::Plus => UnaryOp::Positive,
+        Operator::Minus => UnaryOp::Negative,
+        _ => panic!("Оператор {:?} не может быть унарным.", k),
+    }
+}
+
+fn op2binary(k: Operator) -> BinaryOp {
+    match k {
+        Operator::Plus => BinaryOp::Add,
+        Operator::Minus => BinaryOp::Subtract,
+        Operator::Asterisk => BinaryOp::Multiply,
+        Operator::Slash => BinaryOp::Divide,
+        Operator::Caret => BinaryOp::Power,
+    }
+}
+
 fn token2node(k: Operator, output: &mut Vec<Node>) -> Node {
     if output.len() >= 2 {
-        let op = match k {
-            Operator::Plus => BinaryOp::Add,
-            Operator::Minus => BinaryOp::Subtract,
-            Operator::Asterisk => BinaryOp::Multiply,
-            Operator::Slash => BinaryOp::Divide,
-            Operator::Caret => BinaryOp::Power,
-        };
+        let op = op2binary(k);
         let rhs = Box::new(output.pop().unwrap());
         let lhs = Box::new(output.pop().unwrap());
 
         return Node::BinaryExpr { op, lhs, rhs };
     } else if output.len() == 1 {
-        let op = match k {
-            Operator::Plus => UnaryOp::Positive,
-            Operator::Minus => UnaryOp::Negative,
-            _ => panic!("Оператор {:?} не может быть унарным.", k),
-        };
+        let op = op2unary(k);
         let child = Box::new(output.pop().unwrap());
 
         return Node::UnaryExpr { op, child };
