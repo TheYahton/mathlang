@@ -22,6 +22,18 @@ fn parse_number(index: usize, text: &Vec<char>) -> (usize, Number) {
     )
 }
 
+fn is_word(index: usize, text: &Vec<char>, word: &str) -> bool {
+    let letters: Vec<char> = word.chars().collect();
+    let mut j = 0;
+    while index + j < text.len() && j < letters.len() {
+        if !(text[index + j] == letters[j]) {
+            return false;
+        }
+        j += 1;
+    }
+    return true;
+}
+
 pub fn tokenize(text: &String) -> Vec<Token> {
     let mut expression: Vec<Token> = Vec::new();
     let text: Vec<char> = text.chars().collect();
@@ -46,6 +58,7 @@ pub fn tokenize(text: &String) -> Vec<Token> {
                     Some(Num(integer))
                 }
             }
+            'π' => Some(Num(PI.clone())),
             '+' => Some(Act(Plus)),
             '-' => Some(Act(Minus)),
             '*' => Some(Act(Asterisk)),
@@ -53,15 +66,14 @@ pub fn tokenize(text: &String) -> Vec<Token> {
             '^' => Some(Act(Caret)),
             '(' => Some(Lparenthesis),
             ')' => Some(Rparenthesis),
-            x if (x == 's') && (text[index + 1] == 'i') && (text[index + 2] == 'n') => {
+            _ if is_word(index, &text, "sin") => {
                 index += 2;
                 Some(Act(Sinus))
             }
-            x if (x == 'c') && (text[index + 1] == 'o') && (text[index + 2] == 's') => {
+            _ if is_word(index, &text, "cos") => {
                 index += 2;
                 Some(Act(Cosin))
             }
-            'π' => Some(Num(PI.clone())),
             why => panic!("LexerError: '{}' is unexpected!", why),
         };
         if let Some(x) = token {

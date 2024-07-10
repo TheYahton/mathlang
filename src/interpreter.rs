@@ -1,4 +1,4 @@
-use crate::structs::{BinaryAct::*, Node, Number, UnaryAct::*, Math};
+use crate::structs::{BinaryAct::*, Math, Node, Number, UnaryAct::*};
 
 pub fn interpret(node: Node) -> Number {
     match node {
