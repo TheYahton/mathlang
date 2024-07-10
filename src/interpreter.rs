@@ -1,4 +1,4 @@
-use crate::structs::{BinaryAct::*, Node, Number, UnaryAct::*, Wtf};
+use crate::structs::{BinaryAct::*, Node, Number, UnaryAct::*, Math};
 
 pub fn interpret(node: Node) -> Number {
     match node {
@@ -21,7 +21,7 @@ pub fn interpret(node: Node) -> Number {
                 Subtract => lhs - rhs,
                 Multiply => lhs * rhs,
                 Divide => lhs / rhs,
-                Power => lhs.pown(rhs),
+                Power => lhs.pow(rhs),
             }
         }
     }

@@ -1,14 +1,14 @@
 pub use num::rational::BigRational as Number;
 use num::ToPrimitive;
 
-pub trait Wtf {
-    fn pown(self, exp: Self) -> Self;
+pub trait Math {
+    fn pow(self, exp: Self) -> Self;
     fn sin(self) -> Self;
     fn cos(self) -> Self;
 }
 
-impl Wtf for Number {
-    fn pown(self, exp: Self) -> Self {
+impl Math for Number {
+    fn pow(self, exp: Self) -> Self {
         num::pow::Pow::pow(self, exp.to_integer())
     }
 
