@@ -1,4 +1,8 @@
+use once_cell::sync::Lazy;
+
 pub type Number = num::rational::BigRational;
+
+pub static PI: Lazy<Number> = Lazy::new(|| Number::from_float(std::f64::consts::PI).unwrap());
 
 #[derive(Debug)]
 pub enum Operator {

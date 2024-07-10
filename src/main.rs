@@ -23,7 +23,7 @@ fn main() {
             Err(why) => panic!("{}", why),
             Ok(_) => (),
         }
-        println!("{:?}", interpret(ast(tokenize(&text))));
+        println!("{}", interpret(ast(tokenize(&text))));
     } else {
         println!("Usage: mathlang FILE");
         /*

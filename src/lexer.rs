@@ -2,6 +2,7 @@ use crate::structs::{
     Number,
     Operator::*,
     Token::{self, *},
+    PI,
 };
 use num::bigint::BigInt;
 
@@ -52,6 +53,7 @@ pub fn tokenize(text: &String) -> Vec<Token> {
             '^' => Some(Op(Caret)),
             '(' => Some(Lparenthesis),
             ')' => Some(Rparenthesis),
+            'π' => Some(Num(PI.clone())),
             why => panic!("LexerError: '{}' is unexpected!", why),
         };
         if let Some(x) = token {
