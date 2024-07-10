@@ -1,9 +1,8 @@
-use crate::structs::{BinaryOp, Node, UnaryOp};
+use crate::structs::{BinaryOp, Node, Number, UnaryOp};
 
-pub fn interpret(node: Node) -> f64 {
+pub fn interpret(node: Node) -> Number {
     match node {
-        Node::Int(n) => n as f64,
-        Node::Float(x) => x,
+        Node::Num(k) => k,
         Node::UnaryExpr { op, child } => {
             let child = interpret(*child);
             match op {
@@ -20,7 +19,7 @@ pub fn interpret(node: Node) -> f64 {
                 BinaryOp::Subtract => lhs - rhs,
                 BinaryOp::Multiply => lhs * rhs,
                 BinaryOp::Divide => lhs / rhs,
-                BinaryOp::Power => lhs.powf(rhs),
+                BinaryOp::Power => num::pow::Pow::pow(lhs, rhs.to_integer()),
             }
         }
     }

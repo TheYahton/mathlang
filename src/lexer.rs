@@ -1,15 +1,24 @@
 use crate::structs::{
+    Number,
     Operator::*,
     Token::{self, *},
 };
+use num::bigint::BigInt;
 
-fn parse_number(index: usize, text: &Vec<char>) -> (usize, String) {
+fn parse_number(index: usize, text: &Vec<char>) -> (usize, Number) {
     let mut j = 1;
     while (index + j) < text.len() && text[index + j].is_digit(10) {
         j += 1;
     }
 
-    (j - 1, text[index..index + j].iter().collect())
+    (
+        j - 1,
+        text[index..index + j]
+            .iter()
+            .collect::<String>()
+            .parse()
+            .unwrap(),
+    )
 }
 
 pub fn tokenize(text: &String) -> Vec<Token> {
@@ -27,9 +36,13 @@ pub fn tokenize(text: &String) -> Vec<Token> {
                     index += 2;
                     let (delta_index, fractional) = parse_number(index, &text);
                     index += delta_index;
-                    Some(Float((integer + "." + &fractional).parse().unwrap()))
+                    Some(Num(integer
+                        + fractional.clone()
+                            / BigInt::from(
+                                10u64.pow(fractional.to_string().len() as u32),
+                            )))
                 } else {
-                    Some(Int(integer.parse().unwrap()))
+                    Some(Num(integer))
                 }
             }
             '+' => Some(Op(Plus)),

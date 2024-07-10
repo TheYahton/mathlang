@@ -1,3 +1,5 @@
+pub type Number = num::rational::BigRational;
+
 #[derive(Debug)]
 pub enum Operator {
     Plus,
@@ -9,8 +11,7 @@ pub enum Operator {
 
 #[derive(Debug)]
 pub enum Token {
-    Int(u32),
-    Float(f64),
+    Num(Number),
     Op(Operator),
     Lparenthesis,
     Rparenthesis,
@@ -33,8 +34,7 @@ pub enum BinaryOp {
 
 #[derive(Debug)]
 pub enum Node {
-    Int(i32),
-    Float(f64),
+    Num(Number),
     UnaryExpr {
         op: UnaryOp,
         child: Box<Node>,

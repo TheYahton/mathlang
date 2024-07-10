@@ -44,8 +44,7 @@ pub fn ast(mut expression: Vec<Token>) -> Node {
     while !expression.is_empty() {
         let token = expression.pop().unwrap();
         match token {
-            Token::Int(k) => output.push(Node::Int(k as i32)),
-            Token::Float(k) => output.push(Node::Float(k)),
+            Token::Num(x) => output.push(Node::Num(x)),
             Token::Op(k) => {
                 if !stack.is_empty() {
                     while !stack.is_empty() {
