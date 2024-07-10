@@ -1,4 +1,4 @@
-use crate::structs::{BinaryOp, Node, Number, UnaryOp};
+use crate::structs::{BinaryAct::*, Node, Number, UnaryAct::*, Wtf};
 
 pub fn interpret(node: Node) -> Number {
     match node {
@@ -6,8 +6,10 @@ pub fn interpret(node: Node) -> Number {
         Node::UnaryExpr { op, child } => {
             let child = interpret(*child);
             match op {
-                UnaryOp::Positive => child,
-                UnaryOp::Negative => -child,
+                Positive => child,
+                Negative => -child,
+                Sin => child.sin(),
+                Cos => child.cos(),
             }
         }
         Node::BinaryExpr { op, lhs, rhs } => {
@@ -15,11 +17,11 @@ pub fn interpret(node: Node) -> Number {
             let rhs = interpret(*rhs);
 
             match op {
-                BinaryOp::Add => lhs + rhs,
-                BinaryOp::Subtract => lhs - rhs,
-                BinaryOp::Multiply => lhs * rhs,
-                BinaryOp::Divide => lhs / rhs,
-                BinaryOp::Power => num::pow::Pow::pow(lhs, rhs.to_integer()),
+                Add => lhs + rhs,
+                Subtract => lhs - rhs,
+                Multiply => lhs * rhs,
+                Divide => lhs / rhs,
+                Power => lhs.pown(rhs),
             }
         }
     }

@@ -1,34 +1,60 @@
+pub use num::rational::BigRational as Number;
+use num::ToPrimitive;
+
+pub trait Wtf {
+    fn pown(self, exp: Self) -> Self;
+    fn sin(self) -> Self;
+    fn cos(self) -> Self;
+}
+
+impl Wtf for Number {
+    fn pown(self, exp: Self) -> Self {
+        num::pow::Pow::pow(self, exp.to_integer())
+    }
+
+    fn sin(self) -> Self {
+        // TODO don't use f64
+        Number::from_float(self.to_f64().unwrap().sin()).unwrap()
+    }
+
+    fn cos(self) -> Self {
+        // TODO don't use f64
+        Number::from_float(self.to_f64().unwrap().cos()).unwrap()
+    }
+}
+
 use once_cell::sync::Lazy;
-
-pub type Number = num::rational::BigRational;
-
 pub static PI: Lazy<Number> = Lazy::new(|| Number::from_float(std::f64::consts::PI).unwrap());
 
 #[derive(Debug)]
-pub enum Operator {
+pub enum Action {
     Plus,
     Minus,
     Asterisk,
     Slash,
     Caret,
+    Sinus,
+    Cosin,
 }
 
 #[derive(Debug)]
 pub enum Token {
     Num(Number),
-    Op(Operator),
+    Act(Action),
     Lparenthesis,
     Rparenthesis,
 }
 
 #[derive(Debug)]
-pub enum UnaryOp {
+pub enum UnaryAct {
     Positive,
     Negative,
+    Sin,
+    Cos,
 }
 
 #[derive(Debug)]
-pub enum BinaryOp {
+pub enum BinaryAct {
     Add,
     Subtract,
     Multiply,
@@ -40,11 +66,11 @@ pub enum BinaryOp {
 pub enum Node {
     Num(Number),
     UnaryExpr {
-        op: UnaryOp,
+        op: UnaryAct,
         child: Box<Node>,
     },
     BinaryExpr {
-        op: BinaryOp,
+        op: BinaryAct,
         lhs: Box<Node>,
         rhs: Box<Node>,
     },

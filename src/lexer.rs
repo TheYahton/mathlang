@@ -1,6 +1,6 @@
 use crate::structs::{
+    Action::*,
     Number,
-    Operator::*,
     Token::{self, *},
     PI,
 };
@@ -46,13 +46,21 @@ pub fn tokenize(text: &String) -> Vec<Token> {
                     Some(Num(integer))
                 }
             }
-            '+' => Some(Op(Plus)),
-            '-' => Some(Op(Minus)),
-            '*' => Some(Op(Asterisk)),
-            '/' => Some(Op(Slash)),
-            '^' => Some(Op(Caret)),
+            '+' => Some(Act(Plus)),
+            '-' => Some(Act(Minus)),
+            '*' => Some(Act(Asterisk)),
+            '/' => Some(Act(Slash)),
+            '^' => Some(Act(Caret)),
             '(' => Some(Lparenthesis),
             ')' => Some(Rparenthesis),
+            x if (x == 's') && (text[index + 1] == 'i') && (text[index + 2] == 'n') => {
+                index += 2;
+                Some(Act(Sinus))
+            }
+            x if (x == 'c') && (text[index + 1] == 'o') && (text[index + 2] == 's') => {
+                index += 2;
+                Some(Act(Cosin))
+            }
             'π' => Some(Num(PI.clone())),
             why => panic!("LexerError: '{}' is unexpected!", why),
         };
