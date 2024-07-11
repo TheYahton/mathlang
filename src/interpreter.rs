@@ -20,7 +20,7 @@ pub fn interpret(node: Node) -> Number {
                 Add => lhs + rhs,
                 Subtract => lhs - rhs,
                 Multiply => lhs * rhs,
-                Divide => rhs / lhs,
+                Divide => lhs / rhs,
                 Power => lhs.pow(rhs),
             }
         }

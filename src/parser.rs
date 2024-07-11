@@ -21,7 +21,7 @@ fn action2node(k: Action, output: &mut Vec<Node>) -> Node {
                     Cosin => Cos,
                     _ => unreachable!(),
                 },
-                child: Box::new(output.pop().unwrap()),
+                child: Box::new(output.remove(0)),
             }
         }
         Asterisk | Slash | Caret => {
@@ -38,8 +38,8 @@ fn action2node(k: Action, output: &mut Vec<Node>) -> Node {
                     Caret => Power,
                     _ => unreachable!(),
                 },
-                lhs: Box::new(output.pop().unwrap()),
-                rhs: Box::new(output.pop().unwrap()),
+                lhs: Box::new(output.remove(0)),
+                rhs: Box::new(output.remove(0)),
             }
         }
         Plus | Minus => {
@@ -50,8 +50,8 @@ fn action2node(k: Action, output: &mut Vec<Node>) -> Node {
                         Minus => Subtract,
                         _ => unreachable!(),
                     },
-                    lhs: Box::new(output.pop().unwrap()),
-                    rhs: Box::new(output.pop().unwrap()),
+                    lhs: Box::new(output.remove(0)),
+                    rhs: Box::new(output.remove(0)),
                 }
             } else if arg_count == 1 {
                 Node::UnaryExpr {
@@ -60,7 +60,7 @@ fn action2node(k: Action, output: &mut Vec<Node>) -> Node {
                         Minus => Negative,
                         _ => unreachable!(),
                     },
-                    child: Box::new(output.pop().unwrap()),
+                    child: Box::new(output.remove(0)),
                 }
             } else {
                 panic!(
