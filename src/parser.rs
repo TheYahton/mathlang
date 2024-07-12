@@ -1,14 +1,14 @@
-use crate::structs::{
+use crate::{
     Action::{self, *},
     BinaryAct::*,
     Node, Token,
-    UnaryAct::*,
+    UnaryAct::{self, *},
 };
 
 fn action2node(k: Action, output: &mut Vec<Node>) -> Node {
     let arg_count = output.len();
     match k {
-        Sinus | Cosin => {
+        Action::Sine | Action::Cosine => {
             if arg_count < 1 {
                 panic!(
                     "Действию {:?} необходим 1 аргумент. Сейчас их {}",
@@ -17,11 +17,11 @@ fn action2node(k: Action, output: &mut Vec<Node>) -> Node {
             }
             Node::UnaryExpr {
                 op: match k {
-                    Sinus => Sin,
-                    Cosin => Cos,
+                    Action::Sine => UnaryAct::Sine,
+                    Action::Cosine => UnaryAct::Cosine,
                     _ => unreachable!(),
                 },
-                child: Box::new(output.remove(0)),
+                child: Box::new(output.pop().unwrap()),
             }
         }
         Asterisk | Slash | Caret => {
@@ -38,8 +38,8 @@ fn action2node(k: Action, output: &mut Vec<Node>) -> Node {
                     Caret => Power,
                     _ => unreachable!(),
                 },
-                lhs: Box::new(output.remove(0)),
-                rhs: Box::new(output.remove(0)),
+                rhs: Box::new(output.pop().unwrap()),
+                lhs: Box::new(output.pop().unwrap()),
             }
         }
         Plus | Minus => {
@@ -50,8 +50,8 @@ fn action2node(k: Action, output: &mut Vec<Node>) -> Node {
                         Minus => Subtract,
                         _ => unreachable!(),
                     },
-                    lhs: Box::new(output.remove(0)),
-                    rhs: Box::new(output.remove(0)),
+                    rhs: Box::new(output.pop().unwrap()),
+                    lhs: Box::new(output.pop().unwrap()),
                 }
             } else if arg_count == 1 {
                 Node::UnaryExpr {
@@ -60,7 +60,7 @@ fn action2node(k: Action, output: &mut Vec<Node>) -> Node {
                         Minus => Negative,
                         _ => unreachable!(),
                     },
-                    child: Box::new(output.remove(0)),
+                    child: Box::new(output.pop().unwrap()),
                 }
             } else {
                 panic!(

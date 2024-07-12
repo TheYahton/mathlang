@@ -1,4 +1,4 @@
-use crate::structs::{
+use crate::{
     Action::*,
     Number,
     Token::{self, *},
@@ -43,17 +43,15 @@ pub fn tokenize(text: &String) -> Vec<Token> {
         let token = match text[index] {
             ' ' | '\n' => None,
             x if x.is_digit(10) => {
-                let (delta_index, integer) = parse_number(index, &text);
-                index += delta_index;
-                if index + 1 < text.len() && text[index + 1] == '.' {
+                let (num_length, integer) = parse_number(index, &text);
+                index += num_length;
+                if text.get(index + 1) == Some(&'.') {
                     index += 2;
-                    let (delta_index, fractional) = parse_number(index, &text);
-                    index += delta_index;
-                    Some(Num(integer
-                        + fractional.clone()
-                            / BigInt::from(
-                                10u64.pow(fractional.to_string().len() as u32),
-                            )))
+                    let (num_length, fractional) = parse_number(index, &text);
+                    index += num_length;
+                    Some(Num(
+                        integer + fractional / BigInt::from(10).pow(num_length as u32 + 1)
+                    ))
                 } else {
                     Some(Num(integer))
                 }
@@ -68,11 +66,11 @@ pub fn tokenize(text: &String) -> Vec<Token> {
             ')' => Some(Rparenthesis),
             _ if is_word(index, &text, "sin") => {
                 index += 2;
-                Some(Act(Sinus))
+                Some(Act(Sine))
             }
             _ if is_word(index, &text, "cos") => {
                 index += 2;
-                Some(Act(Cosin))
+                Some(Act(Cosine))
             }
             why => panic!("LexerError: '{}' is unexpected!", why),
         };
