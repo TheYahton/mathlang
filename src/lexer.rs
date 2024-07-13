@@ -1,8 +1,8 @@
 use crate::{
+    consts,
     Action::*,
     Number,
     Token::{self, *},
-    PI,
 };
 use num::bigint::BigInt;
 
@@ -56,7 +56,7 @@ pub fn tokenize(text: &String) -> Vec<Token> {
                     Some(Num(integer))
                 }
             }
-            'π' => Some(Num(PI.clone())),
+            'π' => Some(Num(consts::PI.clone())),
             '+' => Some(Act(Plus)),
             '-' => Some(Act(Minus)),
             '*' => Some(Act(Asterisk)),

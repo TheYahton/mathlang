@@ -29,8 +29,13 @@ impl Math for Number {
     }
 }
 
-use once_cell::sync::Lazy;
-pub static PI: Lazy<Number> = Lazy::new(|| Number::from_float(std::f64::consts::PI).unwrap());
+pub mod consts {
+    use crate::Number;
+    use num::bigint::BigInt;
+    use once_cell::sync::Lazy;
+    pub static PI: Lazy<Number> = Lazy::new(|| Number::from_float(std::f64::consts::PI).unwrap());
+    pub static ZERO: Lazy<Number> = Lazy::new(|| Number::from(BigInt::ZERO));
+}
 
 #[derive(Debug)]
 pub enum Action {

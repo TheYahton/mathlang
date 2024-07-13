@@ -1,4 +1,5 @@
 use crate::{
+    consts,
     Action::{self, *},
     BinaryAct::*,
     Node, Token,
@@ -121,5 +122,9 @@ pub fn ast(mut expression: Vec<Token>) -> Node {
         let node = action2node(action, &mut output);
         output.push(node);
     }
-    output.pop().expect("Входное выражение пусто.")
+
+    match output.pop() {
+        Some(x) => x,
+        None => Node::Num(consts::ZERO.clone()),
+    }
 }
