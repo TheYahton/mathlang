@@ -84,12 +84,10 @@ pub fn ast(mut expression: Vec<Token>) -> Node {
         match token {
             Token::Num(x) => output.push(Node::Num(x)),
             Token::Act(k) => {
-                if !stack.is_empty() {
-                    while !stack.is_empty() {
-                        let action = stack.remove(stack.len() - 1);
-                        let node = action2node(action, &mut output);
-                        output.push(node);
-                    }
+                while !stack.is_empty() {
+                    let action = stack.pop().unwrap();
+                    let node = action2node(action, &mut output);
+                    output.push(node);
                 }
                 stack.push(k);
             }
